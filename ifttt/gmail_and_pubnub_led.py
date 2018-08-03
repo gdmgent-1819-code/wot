@@ -32,15 +32,15 @@ class MySubscribeCallback(SubscribeCallback):
             # Connect event. You can do stuff like publish, and know you'll get it.
             # Or just use the connected event to confirm you are subscribed for
             # UI / internal notifications, etc
-            pubnub.publish().channel("awesomeChannel").message("hello!!").async(my_publish_callback)
-        elif status.category == PNStatusCategory.PNReconnectedCategory:
             pass
+        elif status.category == PNStatusCategory.PNReconnectedCategory:
             # Happens as part of our regular operation. This event happens when
             # radio / connectivity is lost, then regained.
-        elif status.category == PNStatusCategory.PNDecryptionErrorCategory:
             pass
+        elif status.category == PNStatusCategory.PNDecryptionErrorCategory:
             # Handle message decryption error. Probably client configured to
             # encrypt messages and on live data feed it received plain text.
+            pass
  
     def message(self, pubnub, message):
         pass  # Handle new message stored in message.message
