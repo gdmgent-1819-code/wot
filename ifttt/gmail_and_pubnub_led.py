@@ -15,7 +15,7 @@ import platform
 
 pnconfig = PNConfiguration()
  
-pnconfig.subscribe_key = 'pub-c-7a9982ea-c39a-4d66-b1ca-1c5138235e7'
+pnconfig.subscribe_key = 'pub-c-7a9982ea-c39a-4d66-b1ca-1c5138235ec7'
 pnconfig.publish_key = 'sub-c-857c7620-9722-11e8-979a-3665db0876c0'
  
 pubnub = PubNub(pnconfig)
