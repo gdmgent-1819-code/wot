@@ -4,14 +4,16 @@
 # Settings: https://ifttt.com/services/maker_webhooks/settings
 # Connection: https://maker.ifttt.com/use/c9KgUA_naJd3ZDRJbFb26t
 from sense_hat import SenseHat
-from time import sleep
+from time import sleep, time
 from pubnub.callbacks import SubscribeCallback
 from pubnub.enums import PNStatusCategory
 from pubnub.pnconfiguration import PNConfiguration
 from pubnub.pubnub import PubNub
-import time
 import json
 import platform
+import logging
+
+logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
 
 pnconfig = PNConfiguration()
 
@@ -26,13 +28,18 @@ class MySubscribeCallback(SubscribeCallback):
  
     def status(self, pubnub, status):
         if status.category == PNStatusCategory.PNUnexpectedDisconnectCategory:
-            pass  # This event happens when radio / connectivity is lost
- 
+            # This event happens when radio / connectivity is lost
+            pass
+            pubnub.reconnect()
+        elif status.category == PNStatusCategory.PNTimeoutCategory:
+            pass
+            pubnub.reconnect()
         elif status.category == PNStatusCategory.PNConnectedCategory:
             # Connect event. You can do stuff like publish, and know you'll get it.
             # Or just use the connected event to confirm you are subscribed for
             # UI / internal notifications, etc
             pass
+             
         elif status.category == PNStatusCategory.PNReconnectedCategory:
             # Happens as part of our regular operation. This event happens when
             # radio / connectivity is lost, then regained.
@@ -43,8 +50,10 @@ class MySubscribeCallback(SubscribeCallback):
             pass
  
     def message(self, pubnub, message):
-        pass  # Handle new message stored in message.message
+        # Handle new message stored in message.message
+        payload = message.message
+        print(payload['text'])        
  
  
 pubnub.add_listener(MySubscribeCallback())
-pubnub.subscribe().channels('ledChannel').execute()
+pubnub.subscribe().channels('nmd_wot').execute()
