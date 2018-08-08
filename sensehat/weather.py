@@ -1,3 +1,5 @@
+#-*- coding: utf-8 -*-
+
 from sense_hat import SenseHat
 from time import time, sleep
 import os
@@ -23,13 +25,16 @@ def get_smooth(x):
   return(xs)
 
 # get the real temperature
-def get_temp():
+def get_temp(with_case):
     temp_humidity = sense_hat.get_temperature_from_humidity()
     temp_pressure = sense_hat.get_temperature_from_pressure()
     temp = (temp_humidity + temp_pressure)/2
-    temp_cpu = get_cpu_temp()
-    temp_corrected = temp - ((temp_cpu - temp)/TEMP_CORRECTION_FACTOR)
-    temp_smooth = get_smooth(temp_corrected)
+    if with_case:
+        temp_cpu = get_cpu_temp()
+        temp_corrected = temp - ((temp_cpu - temp)/TEMP_CORRECTION_FACTOR)
+        temp_smooth = get_smooth(temp_corrected)
+    else:
+        temp_smooth = get_smooth(temp)
     return(temp_smooth)
 
 try:
@@ -42,8 +47,12 @@ except:
     
 def main():
     while True:
-        temp = round(get_temp());
-        print('The real temperature: {}'.format(temp))
+        temp = round(get_temp(True));
+        print('Temperature: {}{}C'.format(temp, ''))
+        humidity = round(sense_hat.get_humidity())
+        print('Humidity: %s %%' % humidity)
+        pressure = round(sense_hat.get_pressure())
+        print('Pressure: %s mbar' % pressure)
         sleep(5)
         
 if __name__ == "__main__":
