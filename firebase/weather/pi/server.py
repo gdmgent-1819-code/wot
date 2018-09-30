@@ -6,11 +6,20 @@ from firebase_admin import credentials
 from firebase_admin import db
 from sense_hat import SenseHat
 from time import time, sleep
+import subprocess
 import os
 import sys
 
 serviceAccountKey = '../../../../../keys/wot-1819-firebase-adminsdk-rdty1-0f1422347a.json'
 databaseURL = 'https://wot-1819.firebaseio.com'
+
+def get_sensehat_temp():
+    process = subprocess.Popen('sudo python3 sensehat_temperature.py True', shell=True, stdout=subprocess.PIPE)
+    (output, err) = process.communicate()
+    process_status = process.wait()
+    temp_str = str(output).replace("b'", "").replace("\\n'", "")
+    temp = float(temp_str)    
+    return(temp)
 
 try:
     # Fetch the service account key JSON file contents
@@ -37,7 +46,8 @@ except:
     
 def main():
     while True:
-        temperature = round(sense_hat.get_temperature())
+        #temperature = round(sense_hat.get_temperature())
+        temperature = round(get_sensehat_temp())
         humidity = round(sense_hat.get_humidity())
         pressure = round(sense_hat.get_pressure())
         data = {
